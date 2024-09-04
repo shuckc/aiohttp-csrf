@@ -26,4 +26,4 @@ htmlcov
 deps/
 docs/_build/
 
-idea/
+idea/venv
