@@ -14,12 +14,11 @@ class FakeStorage(aiohttp_csrf.storage.BaseStorage):
         request["my_field"] = token
 
 
-async def test_1():
+async def test_1() -> None:
     storage = FakeStorage()
 
-    storage._generate_token = MagicMock(return_value="1")
-    storage._get = MagicMock(return_value="1")
-    storage._save = MagicMock()
+    storage._generate_token = MagicMock(return_value="1")  # type: ignore[method-assign]
+    storage._get = MagicMock(return_value="1")  # type: ignore[method-assign]
 
     assert storage._generate_token.call_count == 0
 
@@ -35,10 +34,10 @@ async def test_1():
     assert storage._generate_token.call_count == 1
 
 
-async def test_2():
+async def test_2() -> None:
     storage = FakeStorage()
 
-    storage._generate_token = MagicMock(return_value="1")
+    storage._generate_token = MagicMock(return_value="1")  # type: ignore[method-assign]
 
     request = make_mocked_request("/", "GET")
 
@@ -55,7 +54,7 @@ async def test_2():
     await storage.save_token(request2, None)
 
 
-async def test_3():
+async def test_3() -> None:
     class Some:
         pass
 

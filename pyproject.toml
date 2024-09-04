@@ -12,6 +12,9 @@ authors = [
 license = { file= "LICENSE"}
 readme = "README.md"
 dynamic = ["version"]
+dependencies = [
+  "blake3>=0.4.1",
+]
 
 [project.urls]
 Homepage = "https://github.com/shuckc/aiohttp-csrf"
@@ -21,3 +24,4 @@ extend-select = ["I"]
 
 [tool.setuptools]
 packages = ["aiohttp_csrf"]
+

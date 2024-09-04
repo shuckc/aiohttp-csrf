@@ -11,7 +11,7 @@ class FakeClass:
     pass
 
 
-async def test_bad_policy(test_client, init_app):
+async def test_bad_policy(test_client, init_app) -> None:
     policy = FakeClass()
     storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
 
@@ -24,7 +24,7 @@ async def test_bad_policy(test_client, init_app):
         )
 
 
-async def test_bad_storage(test_client, init_app):
+async def test_bad_storage(test_client, init_app) -> None:
     policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
     storage = FakeClass()
 
@@ -37,7 +37,7 @@ async def test_bad_storage(test_client, init_app):
         )
 
 
-async def test_bad_error_renderer(test_client, init_app):
+async def test_bad_error_renderer(test_client, init_app) -> None:
     policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
     storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
 
@@ -51,7 +51,7 @@ async def test_bad_error_renderer(test_client, init_app):
         )
 
 
-async def test_app_without_setup(test_client):
+async def test_app_without_setup(test_client) -> None:
     def create_app(loop):
         app = web.Application()
 

@@ -39,7 +39,7 @@ def create_app(init_app):
     yield go
 
 
-async def test_custom_exception_error_renderer(test_client, create_app):
+async def test_custom_exception_error_renderer(test_client, create_app) -> None:
     client = await test_client(
         create_app,
         error_renderer=web.HTTPBadRequest,
@@ -70,7 +70,7 @@ def make_error_renderer(request):
 
 async def test_custom_coroutine_callable_error_renderer(
     test_client, create_app, make_error_renderer
-):  # noqa
+) -> None:  # noqa
     error_body = b"CSRF error"
 
     error_renderer = make_error_renderer(error_body)
@@ -89,7 +89,7 @@ async def test_custom_coroutine_callable_error_renderer(
     assert await resp.read() == error_body
 
 
-async def test_bad_error_renderer(test_client, create_app):
+async def test_bad_error_renderer(test_client, create_app) -> None:
     error_renderer = "trololo"
 
     with pytest.raises(TypeError):

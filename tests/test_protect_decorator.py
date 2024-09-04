@@ -6,7 +6,7 @@ COOKIE_NAME = "csrf_token"
 HEADER_NAME = "X-CSRF-TOKEN"
 
 
-async def test_decorator_method_view(test_client, init_app):
+async def test_decorator_method_view(test_client, init_app) -> None:
     @aiohttp_csrf.csrf_protect
     async def handler_get(request):
         await aiohttp_csrf.generate_token(request)
@@ -46,7 +46,7 @@ async def test_decorator_method_view(test_client, init_app):
     assert resp.status == 403
 
 
-async def test_decorator_class_view(test_client):
+async def test_decorator_class_view(test_client) -> None:
     class TestView(web.View):
         @aiohttp_csrf.csrf_protect
         async def get(self):
@@ -95,7 +95,7 @@ async def test_decorator_class_view(test_client):
     assert resp.status == 403
 
 
-async def test_handle_http_exceptions(test_client, init_app):
+async def test_handle_http_exceptions(test_client, init_app) -> None:
     @aiohttp_csrf.csrf_protect
     async def handler_get(request):
         await aiohttp_csrf.generate_token(request)

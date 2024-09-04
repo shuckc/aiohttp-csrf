@@ -80,19 +80,19 @@ async def _render_error(
         raise NotImplementedError
 
 
-async def get_token(request: web.Request):
+async def get_token(request: web.Request) -> str:
     storage = _get_storage(request)
 
     return await storage.get(request)
 
 
-async def generate_token(request: web.Request):
+async def generate_token(request: web.Request) -> str:
     storage = _get_storage(request)
 
     return await storage.generate_new_token(request)
 
 
-async def save_token(request: web.Request, response: web.Response):
+async def save_token(request: web.Request, response: web.Response) -> None:
     storage = _get_storage(request)
 
     await storage.save_token(request, response)
@@ -108,7 +108,7 @@ def csrf_exempt(handler):
     return wrapped_handler
 
 
-async def _check(request):
+async def _check(request: web.Request) -> bool:
     if not isinstance(request, web.Request):
         raise RuntimeError("Can't get request from handler params")
 

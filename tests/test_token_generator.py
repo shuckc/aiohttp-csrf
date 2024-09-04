@@ -9,7 +9,7 @@ COOKIE_NAME = "csrf_token"
 HEADER_NAME = "X-CSRF-TOKEN"
 
 
-def test_simple_token_generator():
+def test_simple_token_generator() -> None:
     token_generator = aiohttp_csrf.token_generator.SimpleTokenGenerator()
 
     u = uuid.uuid4()
@@ -20,7 +20,7 @@ def test_simple_token_generator():
         assert u.hex == token
 
 
-def test_hashed_token_generator():
+def test_hashed_token_generator() -> None:
     encoding = aiohttp_csrf.token_generator.HashedTokenGenerator.encoding
 
     token_generator = aiohttp_csrf.token_generator.HashedTokenGenerator(

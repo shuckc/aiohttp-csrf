@@ -1,21 +1,27 @@
+import asyncio
+from typing import Generator
+
 import pytest
 from aiohttp import web
 
 import aiohttp_csrf
+from aiohttp_csrf import AbstractPolicy, AbstractStorage
 
 SESSION_NAME = COOKIE_NAME = "csrf_token"
 FORM_FIELD_NAME = HEADER_NAME = "X-CSRF-TOKEN"
 
 
 @pytest.yield_fixture
-def init_app():
+def init_app() -> (
+    Generator[[asyncio.Loop, AbstractPolicy, AbstractStorage], web.Application]
+):
     def go(
         loop,
         policy,
         storage,
         handlers,
         error_renderer=None,
-    ):
+    ) -> web.Application:
         app = web.Application()
 
         kwargs = {

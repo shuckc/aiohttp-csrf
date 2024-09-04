@@ -1,12 +1,14 @@
+from typing import Callable
+
 from aiohttp import web
 
 
-async def hello(request):
+async def hello(request: web.Request) -> web.Response:
     return web.Response(text="Hello, world")
 
 
-def dec(handler):
-    def wrapped(*args, **kwargs):
+def dec(handler: Callable):
+    def wrapped(*args, **kwargs) -> web.Response:
         request = args[-1]
         print(request)
         breakpoint()
@@ -17,10 +19,10 @@ def dec(handler):
 
 class MyView(web.View):
     @dec
-    async def get(self):
+    async def get(self) -> web.Response:
         return web.Response(text="Get Hello, world")
 
-    async def post(self):
+    async def post(self) -> web.Response:
         return web.Response(text="Post Hello, world")
 
 

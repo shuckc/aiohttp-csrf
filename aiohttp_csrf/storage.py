@@ -117,7 +117,7 @@ class SessionStorage(BaseStorage):
 
     async def _save_token(
         self, request: web.Request, response: web.StreamResponse, token: str
-    ):
+    ) -> None:
         session = await get_session(request)
 
         session[self.session_name] = token

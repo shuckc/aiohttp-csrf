@@ -11,7 +11,7 @@ from .conftest import COOKIE_NAME, HEADER_NAME
 
 @pytest.yield_fixture
 def create_app(init_app):
-    def go(loop, policy):
+    def go(loop, policy) -> web.Application:
         async def handler_get(request):
             await aiohttp_csrf.generate_token(request)
 
@@ -38,7 +38,9 @@ def create_app(init_app):
     yield go
 
 
-async def test_header_policy_success(test_client, create_app, csrf_header_policy):  # noqa
+async def test_header_policy_success(
+    test_client, create_app, csrf_header_policy
+) -> None:  # noqa
     client = await test_client(
         create_app,
         policy=csrf_header_policy,
@@ -57,7 +59,9 @@ async def test_header_policy_success(test_client, create_app, csrf_header_policy
     assert resp.status == 200
 
 
-async def test_header_policy_bad_token(test_client, create_app, csrf_header_policy):  # noqa
+async def test_header_policy_bad_token(
+    test_client, create_app, csrf_header_policy
+) -> None:  # noqa
     real_token = uuid.uuid4().hex
 
     bad_token = real_token
@@ -85,7 +89,9 @@ async def test_header_policy_bad_token(test_client, create_app, csrf_header_poli
         assert resp.status == 403
 
 
-async def test_header_policy_reuse_token(test_client, create_app, csrf_header_policy):  # noqa
+async def test_header_policy_reuse_token(
+    test_client, create_app, csrf_header_policy
+) -> None:  # noqa
     client = await test_client(
         create_app,
         policy=csrf_header_policy,

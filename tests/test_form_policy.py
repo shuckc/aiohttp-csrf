@@ -17,7 +17,7 @@ FORM_FIELD_REGEX = re.compile(
 
 
 @pytest.yield_fixture
-def create_app(init_app):
+def create_app(init_app: web.Application):
     def go(loop, policy, storage):
         async def handler_get(request):
             token = await aiohttp_csrf.generate_token(request)
@@ -65,7 +65,7 @@ async def test_form_policy_success(
     create_app,
     csrf_form_policy,
     csrf_storage,
-):
+) -> None:
     client = await test_client(
         create_app,
         policy=csrf_form_policy,
@@ -94,7 +94,7 @@ async def test_form_policy_bad_token(
     create_app,
     csrf_form_policy,
     csrf_storage,
-):
+) -> None:
     real_token = uuid.uuid4().hex
 
     bad_token = real_token
@@ -128,7 +128,7 @@ async def test_form_policy_reuse_token(
     create_app,
     csrf_form_policy,
     csrf_storage,
-):
+) -> None:
     client = await test_client(
         create_app,
         policy=csrf_form_policy,

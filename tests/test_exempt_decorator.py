@@ -41,7 +41,7 @@ def create_app(init_app):
     yield go
 
 
-async def test_decorator_method_view(test_client, create_app):
+async def test_decorator_method_view(test_client, create_app) -> None:
     client = await test_client(
         create_app,
     )
