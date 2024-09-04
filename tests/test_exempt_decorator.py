@@ -1,9 +1,10 @@
-import aiohttp_csrf
 import pytest
 from aiohttp import web
 
-COOKIE_NAME = 'csrf_token'
-HEADER_NAME = 'X-CSRF-TOKEN'
+import aiohttp_csrf
+
+COOKIE_NAME = "csrf_token"
+HEADER_NAME = "X-CSRF-TOKEN"
 
 
 @pytest.yield_fixture
@@ -12,15 +13,15 @@ def create_app(init_app):
         async def handler_get(request):
             await aiohttp_csrf.generate_token(request)
 
-            return web.Response(body=b'OK')
+            return web.Response(body=b"OK")
 
         @aiohttp_csrf.csrf_exempt
         async def handler_post(request):
-            return web.Response(body=b'OK')
+            return web.Response(body=b"OK")
 
         handlers = [
-            ('GET', '/', handler_get),
-            ('POST', '/', handler_post),
+            ("GET", "/", handler_get),
+            ("POST", "/", handler_post),
         ]
 
         policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
@@ -41,15 +42,14 @@ def create_app(init_app):
 
 
 async def test_decorator_method_view(test_client, create_app):
-
     client = await test_client(
         create_app,
     )
 
-    resp = await client.get('/')
+    resp = await client.get("/")
 
     assert resp.status == 200
 
-    resp = await client.post('/')
+    resp = await client.post("/")
 
     assert resp.status == 200

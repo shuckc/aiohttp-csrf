@@ -1,6 +1,7 @@
 import abc
-from blake3 import blake3
 import uuid
+
+from blake3 import blake3
 
 
 class AbstractTokenGenerator(metaclass=abc.ABCMeta):
@@ -15,7 +16,7 @@ class SimpleTokenGenerator(AbstractTokenGenerator):
 
 
 class HashedTokenGenerator(AbstractTokenGenerator):
-    encoding = 'utf-8'
+    encoding = "utf-8"
 
     def __init__(self, secret_phrase):
         self.secret_phrase = secret_phrase

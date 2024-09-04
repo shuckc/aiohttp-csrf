@@ -8,11 +8,10 @@ except ImportError:  # pragma: no cover
     pass
 
 
-REQUEST_NEW_TOKEN_KEY = 'aiohttp_csrf_new_token'
+REQUEST_NEW_TOKEN_KEY = "aiohttp_csrf_new_token"
 
 
 class AbstractStorage(metaclass=abc.ABCMeta):
-
     @abc.abstractmethod
     async def generate_new_token(self, request):
         pass  # pragma: no cover
@@ -27,15 +26,16 @@ class AbstractStorage(metaclass=abc.ABCMeta):
 
 
 class BaseStorage(AbstractStorage, metaclass=abc.ABCMeta):
-
     def __init__(self, token_generator=None, secret_phrase=None):
         if token_generator is None:
             if secret_phrase is None:
-                raise TypeError('secret_phrase is required for default token type (Hash)')
+                raise TypeError(
+                    "secret_phrase is required for default token type (Hash)"
+                )
             token_generator = HashedTokenGenerator(secret_phrase)
         elif not isinstance(token_generator, AbstractTokenGenerator):
             raise TypeError(
-                'Token generator must be instance of AbstractTokenGenerator',
+                "Token generator must be instance of AbstractTokenGenerator",
             )
 
         self.token_generator = token_generator
@@ -83,7 +83,6 @@ class BaseStorage(AbstractStorage, metaclass=abc.ABCMeta):
 
 
 class CookieStorage(BaseStorage):
-
     def __init__(self, cookie_name, cookie_kwargs=None, *args, **kwargs):
         self.cookie_name = cookie_name
         self.cookie_kwargs = cookie_kwargs or {}

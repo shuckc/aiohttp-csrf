@@ -1,11 +1,12 @@
 import asyncio
 
-import aiohttp_csrf
 import pytest
 from aiohttp import web
 
-COOKIE_NAME = 'csrf_token'
-HEADER_NAME = 'X-CSRF-TOKEN'
+import aiohttp_csrf
+
+COOKIE_NAME = "csrf_token"
+HEADER_NAME = "X-CSRF-TOKEN"
 
 
 @pytest.yield_fixture
@@ -15,16 +16,13 @@ def create_app(init_app):
         async def handler_get(request):
             await aiohttp_csrf.generate_token(request)
 
-            return web.Response(body=b'OK')
+            return web.Response(body=b"OK")
 
         @aiohttp_csrf.csrf_protect(error_renderer=error_renderer)
         async def handler_post(request):
-            return web.Response(body=b'OK')
+            return web.Response(body=b"OK")
 
-        handlers = [
-            ('GET', '/', handler_get),
-            ('POST', '/', handler_post)
-        ]
+        handlers = [("GET", "/", handler_get), ("POST", "/", handler_post)]
 
         storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
         policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
@@ -47,9 +45,9 @@ async def test_custom_exception_error_renderer(test_client, create_app):
         error_renderer=web.HTTPBadRequest,
     )
 
-    await client.get('/')
+    await client.get("/")
 
-    resp = await client.post('/')
+    resp = await client.post("/")
 
     assert resp.status == web.HTTPBadRequest.status_code
 
@@ -70,8 +68,10 @@ def make_error_renderer(request):
     return make_renderer
 
 
-async def test_custom_coroutine_callable_error_renderer(test_client, create_app, make_error_renderer):  # noqa
-    error_body = b'CSRF error'
+async def test_custom_coroutine_callable_error_renderer(
+    test_client, create_app, make_error_renderer
+):  # noqa
+    error_body = b"CSRF error"
 
     error_renderer = make_error_renderer(error_body)
 
@@ -80,9 +80,9 @@ async def test_custom_coroutine_callable_error_renderer(test_client, create_app,
         error_renderer=error_renderer,
     )
 
-    await client.get('/')
+    await client.get("/")
 
-    resp = await client.post('/')
+    resp = await client.post("/")
 
     assert resp.status == 200
 
@@ -90,7 +90,7 @@ async def test_custom_coroutine_callable_error_renderer(test_client, create_app,
 
 
 async def test_bad_error_renderer(test_client, create_app):
-    error_renderer = 'trololo'
+    error_renderer = "trololo"
 
     with pytest.raises(TypeError):
         await test_client(

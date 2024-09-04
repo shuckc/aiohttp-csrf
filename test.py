@@ -30,6 +30,6 @@ async def middleware(request, handler):
 
 
 app = web.Application(middlewares=[middleware])
-app.router.add_route('*', '/', MyView)
+app.router.add_route("*", "/", MyView)
 
 web.run_app(app)

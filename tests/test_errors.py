@@ -1,9 +1,10 @@
-import aiohttp_csrf
 import pytest
 from aiohttp import web
 
-COOKIE_NAME = 'csrf_token'
-HEADER_NAME = 'X-CSRF-TOKEN'
+import aiohttp_csrf
+
+COOKIE_NAME = "csrf_token"
+HEADER_NAME = "X-CSRF-TOKEN"
 
 
 class FakeClass:
@@ -61,8 +62,8 @@ async def test_app_without_setup(test_client):
             return web.Response()
 
         app.router.add_route(
-            'GET',
-            '/',
+            "GET",
+            "/",
             handler,
         )
 
@@ -72,6 +73,6 @@ async def test_app_without_setup(test_client):
         create_app,
     )
 
-    resp = await client.get('/')
+    resp = await client.get("/")
 
     assert resp.status == 500

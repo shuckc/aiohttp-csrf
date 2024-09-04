@@ -1,9 +1,10 @@
-import aiohttp_csrf
 import pytest
 from aiohttp import web
 
-SESSION_NAME = COOKIE_NAME = 'csrf_token'
-FORM_FIELD_NAME = HEADER_NAME = 'X-CSRF-TOKEN'
+import aiohttp_csrf
+
+SESSION_NAME = COOKIE_NAME = "csrf_token"
+FORM_FIELD_NAME = HEADER_NAME = "X-CSRF-TOKEN"
 
 
 @pytest.yield_fixture
@@ -18,12 +19,12 @@ def init_app():
         app = web.Application()
 
         kwargs = {
-            'policy': policy,
-            'storage': storage,
+            "policy": policy,
+            "storage": storage,
         }
 
         if error_renderer is not None:
-            kwargs['error_renderer'] = error_renderer
+            kwargs["error_renderer"] = error_renderer
 
         aiohttp_csrf.setup(app, **kwargs)
 
@@ -39,30 +40,36 @@ def init_app():
     yield go
 
 
-@pytest.fixture(params=[
-    (aiohttp_csrf.policy.FormPolicy, (FORM_FIELD_NAME,)),
-    (aiohttp_csrf.policy.FormAndHeaderPolicy, (HEADER_NAME, FORM_FIELD_NAME)),
-])
+@pytest.fixture(
+    params=[
+        (aiohttp_csrf.policy.FormPolicy, (FORM_FIELD_NAME,)),
+        (aiohttp_csrf.policy.FormAndHeaderPolicy, (HEADER_NAME, FORM_FIELD_NAME)),
+    ]
+)
 def csrf_form_policy(request):
     _class, args = request.param
 
     return _class(*args)
 
 
-@pytest.fixture(params=[
-    (aiohttp_csrf.policy.HeaderPolicy, (HEADER_NAME,)),
-    (aiohttp_csrf.policy.FormAndHeaderPolicy, (HEADER_NAME, FORM_FIELD_NAME)),
-])
+@pytest.fixture(
+    params=[
+        (aiohttp_csrf.policy.HeaderPolicy, (HEADER_NAME,)),
+        (aiohttp_csrf.policy.FormAndHeaderPolicy, (HEADER_NAME, FORM_FIELD_NAME)),
+    ]
+)
 def csrf_header_policy(request):
     _class, args = request.param
 
     return _class(*args)
 
 
-@pytest.fixture(params=[
-    (aiohttp_csrf.storage.SessionStorage, (SESSION_NAME,)),
-    (aiohttp_csrf.storage.CookieStorage, (COOKIE_NAME,)),
-])
+@pytest.fixture(
+    params=[
+        (aiohttp_csrf.storage.SessionStorage, (SESSION_NAME,)),
+        (aiohttp_csrf.storage.CookieStorage, (COOKIE_NAME,)),
+    ]
+)
 def csrf_storage(request):
     _class, args = request.param
 

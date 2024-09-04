@@ -1,8 +1,9 @@
-import aiohttp_csrf
 from aiohttp import web
 
-FORM_FIELD_NAME = '_csrf_token'
-COOKIE_NAME = 'csrf_token'
+import aiohttp_csrf
+
+FORM_FIELD_NAME = "_csrf_token"
+COOKIE_NAME = "csrf_token"
 
 
 def make_app():
@@ -19,7 +20,7 @@ def make_app():
     async def handler_get_form_with_post_token(request):
         token = await aiohttp_csrf.generate_token(request)
 
-        body = '''
+        body = """
             <html>
                 <head><title>Form with csrf protection</title></head>
                 <body>
@@ -30,19 +31,19 @@ def make_app():
                     </form>
                 </body>
             </html>
-        '''  # noqa
+        """  # noqa
 
         body = body.format(field_name=FORM_FIELD_NAME, token=token)
 
         return web.Response(
-            body=body.encode('utf-8'),
-            content_type='text/html',
+            body=body.encode("utf-8"),
+            content_type="text/html",
         )
 
     async def handler_get_form_with_get_token(request):
         token = await aiohttp_csrf.generate_token(request)
 
-        body = '''
+        body = """
             <html>
                 <head><title>Form with csrf protection</title></head>
                 <body>
@@ -52,27 +53,27 @@ def make_app():
                     </form>
                 </body>
             </html>
-        '''  # noqa
+        """  # noqa
 
         body = body.format(field_name=FORM_FIELD_NAME, token=token)
 
         return web.Response(
-            body=body.encode('utf-8'),
-            content_type='text/html',
+            body=body.encode("utf-8"),
+            content_type="text/html",
         )
 
     async def handler_post_check(request):
         post = await request.post()
 
-        body = 'Hello, {name}'.format(name=post['name'])
+        body = "Hello, {name}".format(name=post["name"])
 
         return web.Response(
-            body=body.encode('utf-8'),
-            content_type='text/html',
+            body=body.encode("utf-8"),
+            content_type="text/html",
         )
 
     async def handler_get_form_without_token(request):
-        body = '''
+        body = """
             <html>
                 <head><title>Form without csrf protection</title></head>
                 <body>
@@ -82,47 +83,47 @@ def make_app():
                     </form>
                 </body>
             </html>
-        '''
+        """
 
         return web.Response(
-            body=body.encode('utf-8'),
-            content_type='text/html',
+            body=body.encode("utf-8"),
+            content_type="text/html",
         )
 
     @aiohttp_csrf.csrf_exempt
     async def handler_post_not_check(request):
         post = await request.post()
 
-        body = 'Hello, {name}'.format(name=post['name'])
+        body = "Hello, {name}".format(name=post["name"])
 
         return web.Response(
-            body=body.encode('utf-8'),
-            content_type='text/html',
+            body=body.encode("utf-8"),
+            content_type="text/html",
         )
 
     app.router.add_route(
-        'GET',
-        '/form_with_post_check',
+        "GET",
+        "/form_with_post_check",
         handler_get_form_with_post_token,
     )
     app.router.add_route(
-        'GET',
-        '/form_with_get_check',
+        "GET",
+        "/form_with_get_check",
         handler_get_form_with_get_token,
     )
     app.router.add_route(
-        'POST',
-        '/post_with_check/{'+FORM_FIELD_NAME+'}',
+        "POST",
+        "/post_with_check/{" + FORM_FIELD_NAME + "}",
         handler_post_check,
     )
     app.router.add_route(
-        'GET',
-        '/form_without_check',
+        "GET",
+        "/form_without_check",
         handler_get_form_without_token,
     )
     app.router.add_route(
-        'POST',
-        '/post_without_check',
+        "POST",
+        "/post_without_check",
         handler_post_not_check,
     )
 

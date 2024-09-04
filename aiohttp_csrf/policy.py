@@ -9,7 +9,6 @@ class AbstractPolicy(metaclass=abc.ABCMeta):
 
 
 class FormPolicy(AbstractPolicy):
-
     def __init__(self, field_name):
         self.field_name = field_name
 
@@ -17,14 +16,13 @@ class FormPolicy(AbstractPolicy):
         get = request.match_info.get(self.field_name, None)
         post_req = await request.post() if get is None else None
         post = post_req.get(self.field_name) if post_req is not None else None
-        post = post if post is not None else ''
+        post = post if post is not None else ""
         token = get if get is not None else post
 
         return compare_digest(token, original_value)
 
 
 class HeaderPolicy(AbstractPolicy):
-
     def __init__(self, header_name):
         self.header_name = header_name
 
@@ -35,7 +33,6 @@ class HeaderPolicy(AbstractPolicy):
 
 
 class FormAndHeaderPolicy(HeaderPolicy, FormPolicy):
-
     def __init__(self, header_name, field_name):
         self.header_name = header_name
         self.field_name = field_name

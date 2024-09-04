@@ -1,9 +1,10 @@
 import uuid
 from unittest import mock
 
-import aiohttp_csrf
 import pytest
 from aiohttp import web
+
+import aiohttp_csrf
 
 from .conftest import COOKIE_NAME, HEADER_NAME
 
@@ -14,15 +15,12 @@ def create_app(init_app):
         async def handler_get(request):
             await aiohttp_csrf.generate_token(request)
 
-            return web.Response(body=b'OK')
+            return web.Response(body=b"OK")
 
         async def handler_post(request):
-            return web.Response(body=b'OK')
+            return web.Response(body=b"OK")
 
-        handlers = [
-            ('GET', '/', handler_get),
-            ('POST', '/', handler_post)
-        ]
+        handlers = [("GET", "/", handler_get), ("POST", "/", handler_post)]
 
         storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
 
@@ -46,7 +44,7 @@ async def test_header_policy_success(test_client, create_app, csrf_header_policy
         policy=csrf_header_policy,
     )
 
-    resp = await client.get('/')
+    resp = await client.get("/")
 
     assert resp.status == 200
 
@@ -54,7 +52,7 @@ async def test_header_policy_success(test_client, create_app, csrf_header_policy
 
     headers = {HEADER_NAME: token}
 
-    resp = await client.post('/', headers=headers)
+    resp = await client.post("/", headers=headers)
 
     assert resp.status == 200
 
@@ -68,22 +66,21 @@ async def test_header_policy_bad_token(test_client, create_app, csrf_header_poli
         bad_token = uuid.uuid4().hex
 
     with mock.patch(
-        'aiohttp_csrf.token_generator.SimpleTokenGenerator.generate',
+        "aiohttp_csrf.token_generator.SimpleTokenGenerator.generate",
         return_value=real_token,
     ):
-
         client = await test_client(
             create_app,
             policy=csrf_header_policy,
         )
 
-        resp = await client.get('/')
+        resp = await client.get("/")
 
         assert resp.status == 200
 
         headers = {HEADER_NAME: bad_token}
 
-        resp = await client.post('/', headers=headers)
+        resp = await client.post("/", headers=headers)
 
         assert resp.status == 403
 
@@ -94,7 +91,7 @@ async def test_header_policy_reuse_token(test_client, create_app, csrf_header_po
         policy=csrf_header_policy,
     )
 
-    resp = await client.get('/')
+    resp = await client.get("/")
 
     assert resp.status == 200
 
@@ -102,10 +99,10 @@ async def test_header_policy_reuse_token(test_client, create_app, csrf_header_po
 
     headers = {HEADER_NAME: token}
 
-    resp = await client.post('/', headers=headers)
+    resp = await client.post("/", headers=headers)
 
     assert resp.status == 200
 
-    resp = await client.post('/', headers=headers)
+    resp = await client.post("/", headers=headers)
 
     assert resp.status == 403
