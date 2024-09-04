@@ -1,5 +1,3 @@
-import asyncio
-
 from aiohttp import web
 
 
@@ -10,7 +8,8 @@ async def hello(request):
 def dec(handler):
     def wrapped(*args, **kwargs):
         request = args[-1]
-        import ipdb;ipdb.set_trace()
+        print(request)
+        breakpoint()
         return handler(*args, **kwargs)
 
     return wrapped
