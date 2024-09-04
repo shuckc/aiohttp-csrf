@@ -1,6 +1,9 @@
 import abc
+from typing import Optional, Protocol
 
-from .token_generator import AbstractTokenGenerator, HashedTokenGenerator
+from aiohttp import web
+
+from .token_generator import HashedTokenGenerator, TokenGenerator
 
 try:
     from aiohttp_session import get_session
@@ -11,41 +14,38 @@ except ImportError:  # pragma: no cover
 REQUEST_NEW_TOKEN_KEY = "aiohttp_csrf_new_token"
 
 
-class AbstractStorage(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
-    async def generate_new_token(self, request):
-        pass  # pragma: no cover
+class AbstractStorage(Protocol):
+    async def generate_new_token(self, request: web.Request) -> str: ...
 
-    @abc.abstractmethod
-    async def get(self, request):
-        pass  # pragma: no cover
+    async def get(self, request: web.Request) -> str: ...
 
-    @abc.abstractmethod
-    async def save_token(self, request, response):
-        pass  # pragma: no cover
+    async def save_token(
+        self, request: web.Request, response: web.Response
+    ) -> None: ...
 
 
-class BaseStorage(AbstractStorage, metaclass=abc.ABCMeta):
-    def __init__(self, token_generator=None, secret_phrase=None):
+class BaseStorage:
+    def __init__(
+        self,
+        token_generator: Optional[TokenGenerator] = None,
+        secret_phrase: Optional[str] = None,
+    ):
         if token_generator is None:
             if secret_phrase is None:
                 raise TypeError(
                     "secret_phrase is required for default token type (Hash)"
                 )
             token_generator = HashedTokenGenerator(secret_phrase)
-        elif not isinstance(token_generator, AbstractTokenGenerator):
-            raise TypeError(
-                "Token generator must be instance of AbstractTokenGenerator",
-            )
 
         self.token_generator = token_generator
 
-    def _generate_token(self):
+    def _generate_token(self) -> str:
         return self.token_generator.generate()
 
-    async def generate_new_token(self, request):
+    async def generate_new_token(self, request: web.Request) -> str:
         if REQUEST_NEW_TOKEN_KEY in request:
-            return request[REQUEST_NEW_TOKEN_KEY]
+            # perhaps request will support web.AppKey later?
+            return str(request[REQUEST_NEW_TOKEN_KEY])
 
         token = self._generate_token()
 
@@ -54,10 +54,9 @@ class BaseStorage(AbstractStorage, metaclass=abc.ABCMeta):
         return token
 
     @abc.abstractmethod
-    async def _get(self, request):
-        pass  # pragma: no cover
+    async def _get(self, request: web.Request) -> str: ...
 
-    async def get(self, request):
+    async def get(self, request: web.Request) -> str:
         token = await self._get(request)
 
         await self.generate_new_token(request)
@@ -65,10 +64,13 @@ class BaseStorage(AbstractStorage, metaclass=abc.ABCMeta):
         return token
 
     @abc.abstractmethod
-    async def _save_token(self, request, response, token):
-        pass  # pragma: no cover
+    async def _save_token(
+        self, request: web.Request, response: web.StreamResponse, token: str
+    ) -> None: ...
 
-    async def save_token(self, request, response):
+    async def save_token(
+        self, request: web.Request, response: web.StreamResponse
+    ) -> None:
         old_token = await self._get(request)
 
         if REQUEST_NEW_TOKEN_KEY in request:
@@ -83,16 +85,18 @@ class BaseStorage(AbstractStorage, metaclass=abc.ABCMeta):
 
 
 class CookieStorage(BaseStorage):
-    def __init__(self, cookie_name, cookie_kwargs=None, *args, **kwargs):
+    def __init__(self, cookie_name: str, cookie_kwargs=None, *args, **kwargs):
         self.cookie_name = cookie_name
         self.cookie_kwargs = cookie_kwargs or {}
 
         super().__init__(*args, **kwargs)
 
-    async def _get(self, request):
-        return request.cookies.get(self.cookie_name, None)
+    async def _get(self, request: web.Request) -> str:
+        return request.cookies.get(self.cookie_name, "")
 
-    async def _save_token(self, request, response, token):
+    async def _save_token(
+        self, request: web.Request, response: web.StreamResponse, token: str
+    ) -> None:
         response.set_cookie(
             self.cookie_name,
             token,
@@ -101,17 +105,19 @@ class CookieStorage(BaseStorage):
 
 
 class SessionStorage(BaseStorage):
-    def __init__(self, session_name, *args, **kwargs):
+    def __init__(self, session_name: str, *args, **kwargs):
         self.session_name = session_name
 
         super().__init__(*args, **kwargs)
 
-    async def _get(self, request):
+    async def _get(self, request: web.Request) -> str:
         session = await get_session(request)
 
         return session.get(self.session_name, None)
 
-    async def _save_token(self, request, response, token):
+    async def _save_token(
+        self, request: web.Request, response: web.StreamResponse, token: str
+    ):
         session = await get_session(request)
 
         session[self.session_name] = token

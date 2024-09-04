@@ -1,27 +1,25 @@
-import abc
 import uuid
+from typing import Protocol
 
 from blake3 import blake3
 
 
-class AbstractTokenGenerator(metaclass=abc.ABCMeta):
-    @abc.abstractmethod
-    def generate(self):
-        pass  # pragma: no cover
+class TokenGenerator(Protocol):
+    def generate(self) -> str: ...
 
 
-class SimpleTokenGenerator(AbstractTokenGenerator):
-    def generate(self):
+class SimpleTokenGenerator:
+    def generate(self) -> str:
         return uuid.uuid4().hex
 
 
-class HashedTokenGenerator(AbstractTokenGenerator):
+class HashedTokenGenerator:
     encoding = "utf-8"
 
-    def __init__(self, secret_phrase):
+    def __init__(self, secret_phrase: str):
         self.secret_phrase = secret_phrase
 
-    def generate(self):
+    def generate(self) -> str:
         token = uuid.uuid4().hex
 
         token += self.secret_phrase
