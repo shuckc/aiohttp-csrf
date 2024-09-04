@@ -1,23 +1,23 @@
-[tool]
-[tool.poetry]
+[build-system]
+requires = ["setuptools>=64.0", "setuptools_scm[toml]>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
 name = "aiohttp_csrf"
-version = "0.1.1"
 description = "CSRF protection for aiohttp-server"
-authors = ["TensorTom"]
-license = "MIT"
+authors = [
+  { name="TensorTom"},
+  { name="shuckc", email="chris@shucksmith.co.uk" },
+]
+license = { file= "LICENSE"}
 readme = "README.md"
-homepage = "https://github.com/TensorTom/aiohttp-csrf"
+dynamic = ["version"]
 
-[tool.poetry.dependencies]
-python = ">=3.8.3, <4"
-aiohttp = ">=3.6.2, <4.1"
-aiohttp-session = "^2"
-blake3 = "^0.1.8"
+[project.urls]
+Homepage = "https://github.com/shuckc/aiohttp-csrf"
 
-[tool.poetry.dev-dependencies]
-flake8 = ">=3.7.9"
-isort = "==4.3.21"
-pytest = ">=5.3.5"
-pytest-aiohttp = "^0.3"
-pytest-cov = ">=2.8.1"
-tox = ">=3.14.5"
+[tool.ruff.lint]
+extend-select = ["I"]
+
+[tool.setuptools]
+packages = ["aiohttp_csrf"]
