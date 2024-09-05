@@ -29,10 +29,10 @@ def setup(
     app[APP_POLICY_KEY] = policy
     app[APP_STORAGE_KEY] = storage
 
-    # if not isinstance(error_renderer, Exception) and not callable(error_renderer):  # noqa
-    #    raise TypeError(
-    #        "Default error renderer must be instance of Exception or callable."
-    #    )
+    if not isinstance(error_renderer, Exception) and not callable(error_renderer):  # noqa
+        raise TypeError(
+            "Default error renderer must be instance of Exception or callable."
+        )
     # app[APP_ERROR_RENDERER_KEY] = error_renderer
 
 

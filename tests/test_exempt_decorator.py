@@ -25,7 +25,9 @@ def create_app(init_app):
         ]
 
         policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
-        storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+        storage = aiohttp_csrf.storage.CookieStorage(
+            COOKIE_NAME, {}, secret_phrase="test"
+        )
 
         app = init_app(
             policy=policy,
@@ -50,6 +52,7 @@ async def test_decorator_method_view(test_client, create_app) -> None:
 
     assert resp.status == 200
 
+    # POST method handler has csrf_exempt marker
     resp = await client.post("/")
 
     assert resp.status == 200

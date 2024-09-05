@@ -1,5 +1,6 @@
 import asyncio
-from typing import Generator
+import collections.abc
+from typing import Any, Callable
 
 import pytest
 from aiohttp import web
@@ -13,7 +14,12 @@ FORM_FIELD_NAME = HEADER_NAME = "X-CSRF-TOKEN"
 
 @pytest.yield_fixture
 def init_app() -> (
-    Generator[[asyncio.Loop, AbstractPolicy, AbstractStorage], web.Application]
+    collections.abc.Iterator[
+        Callable[
+            [asyncio.AbstractEventLoop, AbstractPolicy, AbstractStorage, Any, Any],
+            web.Application,
+        ]
+    ]
 ):
     def go(
         loop,
@@ -73,7 +79,7 @@ def csrf_header_policy(request):
 @pytest.fixture(
     params=[
         (aiohttp_csrf.storage.SessionStorage, (SESSION_NAME,)),
-        (aiohttp_csrf.storage.CookieStorage, (COOKIE_NAME,)),
+        (aiohttp_csrf.storage.CookieStorage, (COOKIE_NAME, {"secret_phrase": "test"})),
     ]
 )
 def csrf_storage(request):

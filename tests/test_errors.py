@@ -11,35 +11,37 @@ class FakeClass:
     pass
 
 
-async def test_bad_policy(test_client, init_app) -> None:
-    policy = FakeClass()
-    storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+# there is no longer an extends check on the policy, so this no longer raises
+# async def test_bad_policy(test_client, init_app) -> None:
+#     policy = FakeClass()
+#     storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME, {}, secret_phrase="test")
+#
+#     with pytest.raises(TypeError):
+#         await test_client(
+#             init_app,
+#             policy=policy,
+#             storage=storage,
+#             handlers=[],
+#         )
 
-    with pytest.raises(TypeError):
-        await test_client(
-            init_app,
-            policy=policy,
-            storage=storage,
-            handlers=[],
-        )
 
-
-async def test_bad_storage(test_client, init_app) -> None:
-    policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
-    storage = FakeClass()
-
-    with pytest.raises(TypeError):
-        await test_client(
-            init_app,
-            policy=policy,
-            storage=storage,
-            handlers=[],
-        )
+# there is no longer an extends check on the storage, so this no longer raises
+# async def test_bad_storage(test_client, init_app) -> None:
+#     policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
+#     storage = FakeClass()
+#
+#     with pytest.raises(TypeError):
+#         await test_client(
+#             init_app,
+#             policy=policy,
+#             storage=storage,
+#             handlers=[],
+#         )
 
 
 async def test_bad_error_renderer(test_client, init_app) -> None:
     policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
-    storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+    storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME, {}, secret_phrase="test")
 
     with pytest.raises(TypeError):
         await test_client(
