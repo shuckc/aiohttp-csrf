@@ -20,7 +20,7 @@ async def test_decorator_method_view(test_client, init_app) -> None:
     handlers = [("GET", "/", handler_get), ("POST", "/", handler_post)]
 
     policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
-    storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+    storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME, secret_phrase="test")
 
     client = await test_client(
         init_app,
@@ -60,7 +60,7 @@ async def test_decorator_class_view(test_client) -> None:
 
     def create_app(loop):
         policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
-        storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+        storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME, secret_phrase="test")
 
         app = web.Application()
 
@@ -109,7 +109,7 @@ async def test_handle_http_exceptions(test_client, init_app) -> None:
     handlers = [("GET", "/", handler_get), ("POST", "/", handler_post)]
 
     policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
-    storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+    storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME, secret_phrase="test")
 
     client = await test_client(
         init_app,

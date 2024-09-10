@@ -12,7 +12,7 @@ SESSION_NAME = COOKIE_NAME = "csrf_token"
 FORM_FIELD_NAME = HEADER_NAME = "X-CSRF-TOKEN"
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def init_app() -> (
     collections.abc.Iterator[
         Callable[
@@ -78,11 +78,11 @@ def csrf_header_policy(request):
 
 @pytest.fixture(
     params=[
-        (aiohttp_csrf.storage.SessionStorage, (SESSION_NAME,)),
-        (aiohttp_csrf.storage.CookieStorage, (COOKIE_NAME, {"secret_phrase": "test"})),
+        (aiohttp_csrf.storage.SessionStorage, [SESSION_NAME], {"secret_phrase": "test"}),
+        (aiohttp_csrf.storage.CookieStorage, [COOKIE_NAME], {"secret_phrase": "test"}),
     ]
 )
 def csrf_storage(request):
-    _class, args = request.param
+    _class, args, kwargs = request.param
 
-    return _class(*args)
+    return _class(*args, **kwargs)

@@ -16,7 +16,7 @@ FORM_FIELD_REGEX = re.compile(
 )
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def create_app(init_app: web.Application):
     def go(loop, policy, storage):
         async def handler_get(request):

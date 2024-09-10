@@ -7,7 +7,7 @@ COOKIE_NAME = "csrf_token"
 HEADER_NAME = "X-CSRF-TOKEN"
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def create_app(init_app):
     def go(loop):
         async def handler_get(request):

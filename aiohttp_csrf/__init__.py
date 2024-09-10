@@ -8,7 +8,6 @@ from .policy import AbstractPolicy
 from .storage import AbstractStorage
 
 __version__ = "0.1.1"
-
 APP_POLICY_KEY = web.AppKey("aiohttp_csrf_policy", AbstractPolicy)
 APP_STORAGE_KEY = web.AppKey("aiohttp_csrf_storage", AbstractStorage)
 APP_ERROR_RENDERER_KEY = "aiohttp_csrf_error_renderer"
@@ -71,11 +70,11 @@ async def _render_error(
 
     if inspect.isclass(error_renderer) and issubclass(error_renderer, Exception):
         raise error_renderer()
-    # elif callable(error_renderer):
-    #    if asyncio.iscoroutinefunction(error_renderer):
-    #        return await error_renderer(request)
-    #    else:
-    #        return error_renderer(request)
+    elif callable(error_renderer):
+        if asyncio.iscoroutinefunction(error_renderer):
+            return await error_renderer(request)
+        else:
+            return error_renderer(request)
     else:
         raise NotImplementedError
 
@@ -122,7 +121,7 @@ async def _check(request: web.Request) -> bool:
 def csrf_protect(handler=None, error_renderer: Optional[Type[Exception]] = None):
     if (
         error_renderer is not None and not isinstance(error_renderer, Exception)
-        # and not callable(error_renderer)
+        and not callable(error_renderer)
     ):
         raise TypeError("Renderer must be instance of Exception or callable.")
 

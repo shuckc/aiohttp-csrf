@@ -14,7 +14,7 @@ class FakeStorage(aiohttp_csrf.storage.BaseStorage):
 
 
 async def test_1() -> None:
-    storage = FakeStorage()
+    storage = FakeStorage(secret_phrase="test")
 
     storage._generate_token = MagicMock(return_value="1")  # type: ignore[method-assign]
     storage._get = MagicMock(return_value="1")  # type: ignore[method-assign]
@@ -34,7 +34,7 @@ async def test_1() -> None:
 
 
 async def test_2() -> None:
-    storage = FakeStorage()
+    storage = FakeStorage(secret_phrase="test")
 
     storage._generate_token = MagicMock(return_value="1")  # type: ignore[method-assign]
 

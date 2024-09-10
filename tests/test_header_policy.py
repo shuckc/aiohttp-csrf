@@ -9,7 +9,7 @@ import aiohttp_csrf
 from .conftest import COOKIE_NAME, HEADER_NAME
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def create_app(init_app):
     def go(loop, policy) -> web.Application:
         async def handler_get(request):
@@ -22,7 +22,7 @@ def create_app(init_app):
 
         handlers = [("GET", "/", handler_get), ("POST", "/", handler_post)]
 
-        storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+        storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME, secret_phrase="test")
 
         app = init_app(
             policy=policy,

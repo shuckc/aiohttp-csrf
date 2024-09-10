@@ -32,7 +32,6 @@ def test_hashed_token_generator() -> None:
 
     hasher = blake3(token_string.encode(encoding=encoding))
 
-    with mock.patch("hashlib.sha256", return_value=hasher):
+    with mock.patch("uuid.uuid4", return_value=u):
         token = token_generator.generate()
-
         assert token == hasher.hexdigest()

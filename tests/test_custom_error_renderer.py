@@ -9,7 +9,7 @@ COOKIE_NAME = "csrf_token"
 HEADER_NAME = "X-CSRF-TOKEN"
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def create_app(init_app):
     def go(loop, error_renderer):
         @aiohttp_csrf.csrf_protect
@@ -24,7 +24,7 @@ def create_app(init_app):
 
         handlers = [("GET", "/", handler_get), ("POST", "/", handler_post)]
 
-        storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME)
+        storage = aiohttp_csrf.storage.CookieStorage(COOKIE_NAME, secret_phrase="test")
         policy = aiohttp_csrf.policy.HeaderPolicy(HEADER_NAME)
 
         app = init_app(
