@@ -1,8 +1,7 @@
 from unittest.mock import MagicMock
 
-import pytest
 from aiohttp.test_utils import make_mocked_request
-
+from aiohttp.web import StreamResponse
 import aiohttp_csrf
 
 
@@ -40,10 +39,11 @@ async def test_2() -> None:
     storage._generate_token = MagicMock(return_value="1")  # type: ignore[method-assign]
 
     request = make_mocked_request("/", "GET")
+    resp = StreamResponse()
 
     assert storage._generate_token.call_count == 0
 
-    await storage.save_token(request, None)
+    await storage.save_token(request, resp)
 
     assert storage._generate_token.call_count == 1
 
@@ -51,7 +51,7 @@ async def test_2() -> None:
 
     request2["my_field"] = 1
 
-    await storage.save_token(request2, None)
+    await storage.save_token(request2, resp)
 
 
 # we no longer assert subclass, so this no longer raises an error
