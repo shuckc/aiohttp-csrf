@@ -2,6 +2,7 @@ from unittest.mock import MagicMock
 
 from aiohttp.test_utils import make_mocked_request
 from aiohttp.web import StreamResponse
+
 import aiohttp_csrf
 
 

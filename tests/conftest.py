@@ -26,6 +26,7 @@ def init_app() -> (
         policy,
         storage,
         handlers,
+        exception=None,
         error_renderer=None,
     ) -> web.Application:
         app = web.Application()
@@ -35,6 +36,8 @@ def init_app() -> (
             "storage": storage,
         }
 
+        if exception is not None:
+            kwargs["exception"] = exception
         if error_renderer is not None:
             kwargs["error_renderer"] = error_renderer
 
@@ -78,7 +81,11 @@ def csrf_header_policy(request):
 
 @pytest.fixture(
     params=[
-        (aiohttp_csrf.storage.SessionStorage, [SESSION_NAME], {"secret_phrase": "test"}),
+        (
+            aiohttp_csrf.storage.SessionStorage,
+            [SESSION_NAME],
+            {"secret_phrase": "test"},
+        ),
         (aiohttp_csrf.storage.CookieStorage, [COOKIE_NAME], {"secret_phrase": "test"}),
     ]
 )

@@ -41,14 +41,17 @@ class FormAndHeaderPolicy(HeaderPolicy, FormPolicy):
         self.field_name = field_name
 
     async def check(self, request: web.Request, original_value: str) -> bool:
-        header_check = await HeaderPolicy.check(
-            self,
-            request,
-            original_value,
-        )
+        try:
+            header_check = await HeaderPolicy.check(
+                self,
+                request,
+                original_value,
+            )
 
-        if header_check:
-            return True
+            if header_check:
+                return True
+        except ValueError:
+            pass
 
         form_check = await FormPolicy.check(self, request, original_value)
 

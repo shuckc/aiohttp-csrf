@@ -11,14 +11,14 @@ HEADER_NAME = "X-CSRF-TOKEN"
 
 @pytest.fixture
 def create_app(init_app):
-    def go(loop, error_renderer):
+    def go(loop, exception, error_renderer):
         @aiohttp_csrf.csrf_protect
         async def handler_get(request):
             await aiohttp_csrf.generate_token(request)
 
             return web.Response(body=b"OK")
 
-        @aiohttp_csrf.csrf_protect(error_renderer=error_renderer)
+        @aiohttp_csrf.csrf_protect(exception=exception, error_renderer=error_renderer)
         async def handler_post(request):
             return web.Response(body=b"OK")
 
@@ -41,8 +41,7 @@ def create_app(init_app):
 
 async def test_custom_exception_error_renderer(test_client, create_app) -> None:
     client = await test_client(
-        create_app,
-        error_renderer=web.HTTPBadRequest,
+        create_app, exception=web.HTTPBadRequest, error_renderer=None
     )
 
     await client.get("/")
@@ -77,6 +76,7 @@ async def test_custom_coroutine_callable_error_renderer(
 
     client = await test_client(
         create_app,
+        exception=None,
         error_renderer=error_renderer,
     )
 
@@ -95,5 +95,6 @@ async def test_bad_error_renderer(test_client, create_app) -> None:
     with pytest.raises(TypeError):
         await test_client(
             create_app,
+            exception=None,
             error_renderer=error_renderer,
         )
