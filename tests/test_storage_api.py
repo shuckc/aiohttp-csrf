@@ -54,11 +54,12 @@ async def test_2() -> None:
     await storage.save_token(request2, None)
 
 
-async def test_3() -> None:
-    class Some:
-        pass
-
-    token_generator = Some()
-
-    with pytest.raises(TypeError):
-        FakeStorage(token_generator=token_generator)
+# we no longer assert subclass, so this no longer raises an error
+# async def test_3() -> None:
+#     class Some:
+#         pass
+#
+#     token_generator = Some()
+#
+#     with pytest.raises(TypeError):
+#         FakeStorage(token_generator=token_generator)

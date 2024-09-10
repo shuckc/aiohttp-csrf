@@ -79,7 +79,7 @@ async def test_form_policy_success(
     body = await resp.text()
 
     search_result = FORM_FIELD_REGEX.search(body)
-
+    assert search_result is not None
     token = search_result.group("token")
 
     data = {FORM_FIELD_NAME: token}
@@ -142,6 +142,7 @@ async def test_form_policy_reuse_token(
     body = await resp.text()
 
     search_result = FORM_FIELD_REGEX.search(body)
+    assert search_result is not None
 
     token = search_result.group("token")
 
