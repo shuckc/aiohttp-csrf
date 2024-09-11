@@ -4,7 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aiohttp_csrf"
-description = "CSRF protection for aiohttp-server"
+description = "Cross-site request forgery (CSRF) protection for aiohttp-server"
+keywords = ["asyncio", "aiohttp", "csrf", "webserver"]
 authors = [
   { name="TensorTom"},
   { name="shuckc", email="chris@shucksmith.co.uk" },
@@ -12,8 +13,22 @@ authors = [
 license = { file= "LICENSE"}
 readme = "README.md"
 dynamic = ["version"]
+requires-python = ">= 3.9"
 dependencies = [
   "blake3>=0.4.1",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+  "License :: OSI Approved :: MIT License",
+  "Typing :: Typed",
+  "Framework :: Asyncio",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 
 [project.urls]
