@@ -1,5 +1,3 @@
-import asyncio
-
 import pytest
 from aiohttp import web
 
@@ -59,10 +57,13 @@ def make_error_renderer(request):
         def error_renderer(request):
             return web.Response(body=error_body)
 
+        async def error_renderer_async(request):
+            return web.Response(body=error_body)
+
         if not is_coroutine:
             return error_renderer
 
-        return asyncio.coroutine(error_renderer)
+        return error_renderer_async
 
     return make_renderer
 

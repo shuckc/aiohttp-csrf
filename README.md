@@ -5,10 +5,10 @@ The library provides Cross-server request forgery (csrf/xsrf) protection for [ai
 
 This is a fork of https://github.com/bitnom/aiohttp-csrf that adds modern python type annotations, switches to aiohttp `AppKey` tags, and fixes the historic test suite. 
 
-**New in Version 2.0**
+**New in Version 1.0.0**
 
 * Added type hinting throughout.
-* The `aiohttp_csrf.setup()` and `csrf_protect` decorators now take separate optional keyword arguments `exception=...` and `error_renderer=...` to allow customisation of csrf failures. Previously this was an overloaded single argument `error_renderer`.
+* The `aiohttp_csrf.setup()` and `@csrf_protect` decorators now take separate optional keyword arguments `exception=...` and `error_renderer=...` to allow customisation of csrf failures. Previously this was an overloaded single argument `error_renderer`.
 * upgraded dependancy on `blake3`, `aiohttp` and `aiohttp-session`.
 * dropped support for Python 3.8
 
