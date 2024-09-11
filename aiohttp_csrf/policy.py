@@ -1,3 +1,4 @@
+import logging
 from secrets import compare_digest
 from typing import Protocol
 
@@ -19,7 +20,8 @@ class FormPolicy:
         post = post if post is not None else ""
         token = get if get is not None else post
         if not isinstance(token, str):
-            raise ValueError("Missing token")
+            logging.debug("CSRF failure: Missing token on request form")
+            return False
         return compare_digest(token, original_value)
 
 
@@ -30,8 +32,8 @@ class HeaderPolicy:
     async def check(self, request: web.Request, original_value: str) -> bool:
         token = request.headers.get(self.header_name)
         if not isinstance(token, str):
-            raise ValueError("Missing token")
-
+            logging.debug("CSRF failure: Missing token on request headers")
+            return False
         return compare_digest(token, original_value)
 
 
@@ -41,17 +43,14 @@ class FormAndHeaderPolicy(HeaderPolicy, FormPolicy):
         self.field_name = field_name
 
     async def check(self, request: web.Request, original_value: str) -> bool:
-        try:
-            header_check = await HeaderPolicy.check(
-                self,
-                request,
-                original_value,
-            )
+        header_check = await HeaderPolicy.check(
+            self,
+            request,
+            original_value,
+        )
 
-            if header_check:
-                return True
-        except ValueError:
-            pass
+        if header_check:
+            return True
 
         form_check = await FormPolicy.check(self, request, original_value)
 
