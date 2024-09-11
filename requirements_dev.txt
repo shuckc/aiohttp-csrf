@@ -1,6 +1,5 @@
-aiohttp==3.9.3
 -e .
-aiohttp-session==2.12.0
 pytest==8.3.2
 pytest-aiohttp==0.1.3
 ruff==0.6.3
+mypy=<2.0
