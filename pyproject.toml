@@ -11,7 +11,7 @@ authors = [
   { name="TensorTom"},
 ]
 license = { file= "LICENSE"}
-dynamic = ["version"]
+dynamic = ["version", "readme"]
 requires-python = ">= 3.9"
 dependencies = [
   "blake3>=0.4.1",
@@ -22,7 +22,7 @@ classifiers = [
   "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
   "License :: OSI Approved :: MIT License",
   "Typing :: Typed",
-  "Framework :: Asyncio",
+  "Framework :: AsyncIO",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
