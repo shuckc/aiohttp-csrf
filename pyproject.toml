@@ -3,15 +3,14 @@ requires = ["setuptools>=64.0", "setuptools_scm[toml]>=8"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "aiohttp_csrf"
+name = "aiohttp_csrf2"
 description = "Cross-site request forgery (CSRF) protection for aiohttp-server"
 keywords = ["asyncio", "aiohttp", "csrf", "webserver"]
 authors = [
-  { name="TensorTom"},
   { name="shuckc", email="chris@shucksmith.co.uk" },
+  { name="TensorTom"},
 ]
 license = { file= "LICENSE"}
-readme = "README.md"
 dynamic = ["version"]
 requires-python = ">= 3.9"
 dependencies = [
@@ -40,3 +39,5 @@ extend-select = ["I"]
 [tool.setuptools]
 packages = ["aiohttp_csrf"]
 
+[tool.setuptools.dynamic]
+readme = {file = "README.md", content-type = "text/markdown"}

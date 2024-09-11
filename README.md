@@ -1,20 +1,21 @@
 aiohttp_csrf
 =============
 
-The library provides csrf (xsrf) protection for [aiohttp.web](https://docs.aiohttp.org/en/latest/web.html).
+The library provides Cross-server request forgery (csrf/xsrf) protection for [aiohttp.web](https://docs.aiohttp.org/en/latest/web.html).
 
-**Breaking Change:** New in 0.1.0 is Blake3 hashes are used by default. This means you must pass `secret_phrase` to
-`aiohttp_csrf.storage.SessionStorage`
+This is a fork of https://github.com/bitnom/aiohttp-csrf that adds modern python type annotations, switches to aiohttp `AppKey` tags, and fixes the historic test suite. 
 
-**note:** The package [aiohttp-csrf-fixed](https://pypi.org/project/aiohttp-csrf-fixed) is aiohttp_csrf 0.0.2 +
-[this commit](https://github.com/oplik0/aiohttp-csrf/commit/b1bd9207f43a2abf30e32e72ecdb10983a251823). The maintainer
-didn't submit a PR so I just saw it by chance. I haven't had  time to closely examine it but I think it's just removing
-the HTTP security error that happens if no CSRF is provided. Why do that? An HTTP error is good because it tells the
-client what happened and lets you handle it by middleware.
+**New in Version 2.0**
 
-__0.1.1:__ Converted `@aiohttp_csrf.csrf_exempt` decorator to a co-routine to make it compatible with latest aiohttp.
+* Added type hinting throughout.
+* The `aiohttp_csrf.setup()` and `csrf_protect` decorators now take separate optional keyword arguments `exception=...` and `error_renderer=...` to allow customisation of csrf failures. Previously this was an overloaded single argument `error_renderer`.
+* upgraded dependancy on `blake3`, `aiohttp` and `aiohttp-session`.
+* dropped support for Python 3.8
 
-![image](https://img.shields.io/travis/wikibusiness/aiohttp-csrf.svg%0A%20:target:%20https://travis-ci.org/wikibusiness/aiohttp-csrf)
+**Version in 0.1.0**
+
+* uses Blake3 hashes are used by default. This means you must pass `secret_phrase` to whichever storage backend is being used to generate tokens, e.g. `aiohttp_csrf.storage.SessionStorage`
+
 
 Basic usage
 -----------
