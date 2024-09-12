@@ -1,3 +1,5 @@
+import logging
+
 from aiohttp import web
 from aiohttp_session import SimpleCookieStorage
 from aiohttp_session import setup as setup_session
@@ -9,9 +11,13 @@ SESSION_NAME = "csrf_token"
 
 
 def make_app():
+    logging.basicConfig(level=logging.INFO)
+
     csrf_policy = aiohttp_csrf.policy.FormPolicy(FORM_FIELD_NAME)
 
-    csrf_storage = aiohttp_csrf.storage.SessionStorage(SESSION_NAME)
+    csrf_storage = aiohttp_csrf.storage.SessionStorage(
+        SESSION_NAME, secret_phrase="test"
+    )
 
     app = web.Application()
 
@@ -85,6 +91,29 @@ def make_app():
             body=body.encode("utf-8"),
             content_type="text/html",
         )
+
+    async def handler_index(request):
+        body = """
+            <html>
+                <head><title>Session forms</title></head>
+                <body>
+                    <ul>
+                    <li><a href="/form_with_check">form with check</a></li>
+                    <li><a href="/form_without_check">form withoutcheck</a></li>
+                    </ul>
+                </body>
+            </html>
+        """
+        return web.Response(
+            body=body.encode("utf-8"),
+            content_type="text/html",
+        )
+
+    app.router.add_route(
+        "GET",
+        "/",
+        handler_index,
+    )
 
     app.router.add_route(
         "GET",
