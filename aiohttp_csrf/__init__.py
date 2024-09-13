@@ -1,6 +1,6 @@
 import asyncio
 from functools import wraps
-from typing import Callable, Optional
+from typing import Awaitable, Callable, Optional
 
 from aiohttp import web
 
@@ -102,10 +102,12 @@ async def save_token(request: web.Request, response: web.Response) -> None:
     await storage.save_token(request, response)
 
 
-def csrf_exempt(handler):
+def csrf_exempt(
+    handler: Callable[[web.Request], Awaitable[web.StreamResponse]],
+) -> Callable[[web.Request], Awaitable[web.StreamResponse]]:
     @wraps(handler)
-    async def wrapped_handler(*args, **kwargs):
-        return await handler(*args, **kwargs)
+    async def wrapped_handler(request: web.Request) -> web.StreamResponse:
+        return await handler(request)
 
     setattr(wrapped_handler, MIDDLEWARE_SKIP_PROPERTY, True)
 
