@@ -1,4 +1,6 @@
-aiohttp_csrf
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/shuckc/aiohttp-csrf2/check.yml) [![PyPI version](https://badge.fury.io/py/aiohttp_csrf2.svg)](https://badge.fury.io/py/aiohttp_csrf2)
+
+aiohttp_csrf2
 =============
 
 The library provides Cross-server request forgery (csrf/xsrf) protection for [aiohttp.web](https://docs.aiohttp.org/en/latest/web.html).
